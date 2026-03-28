@@ -18,7 +18,7 @@ int centerX;             // X coordinate of center
 int centerY;             // Y coordinate of center
 int initialRadius = 5;  // Start radius
 int radius = initialRadius; // Current radius
-int growthSpeed = 3;     // How fast radius increases
+int growthSpeed = 2;     // How fast radius increases
 Uint32 lastTime = 0;     // Timer for smooth growth
 
 // Initialize window & renderer
