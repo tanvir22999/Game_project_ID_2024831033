@@ -1,7 +1,5 @@
 #include <SDL2/SDL.h>
-#include <iostream>
-#include <cmath>
-
+#include<bits/stdc++.h>
 using namespace std;
 // Defining  screen
 #define SCREEN_WIDTH 1000
@@ -74,7 +72,7 @@ void process_input()
 // Function to draw circle
 void drawCircle(int cx, int cy, int r)
 {
-    //scan squar area 
+    //scan squar area for circle points draw by using renderer drawing tool
  for(int i = -r; i<=r; i++){
     for(int j = -r; j<=r; j++){
         if( i*i + j*j <= r * r){
