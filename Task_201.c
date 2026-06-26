@@ -76,7 +76,13 @@ void generateFood(Food *food)
     food->pos.x = (rand() % (SCREEN_WIDTH / CELL_SIZE)) * CELL_SIZE;
     food->pos.y = (rand() % (SCREEN_HEIGHT / CELL_SIZE)) * CELL_SIZE;
 }
-
+// cheak food eating snake or not
+bool cheakFoodcolision(Snake *snake, Food *food)
+{
+    if (snake->body[0].x == food->pos.x && snake->body[0].y == food->pos.y)
+        return true;
+    return false;
+}
 int main()
 {
 }
