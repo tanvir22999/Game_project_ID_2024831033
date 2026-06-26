@@ -25,7 +25,17 @@ typedef struct
 {
     Point pos;
 } Food;
-
+void initSnake(Snake *snake)
+{
+    snake->length = 3;
+    for (int i = 0; i < 3; i++)
+    { // this loop define intialize snake lenght 3
+        snake->body[i].y = SCREEN_HEIGHT / 2;
+        snake->body[i].x = SCREEN_HEIGHT / 2 - CELL_SIZE * i;
+    }
+    snake->dx = CELL_SIZE;
+    snake->dy = 0;
+}
 int main()
 {
 }
