@@ -1,33 +1,31 @@
 #include <SDL2/SDL.h>
-#include <iostream>
-#include <cmath>
-
-using namespace std;
+#include <stdio.h>
+#include <stdlib.h>
 
 // Defining screen
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
 
 // Global variables
-bool gameIsRunning = false; // To control program
-SDL_Window* window = NULL;  // Main window
-SDL_Renderer* renderer = NULL; // Drawing tool
+int gameIsRunning = 0; // To control program
+SDL_Window *window = NULL;
+SDL_Renderer *renderer = NULL;
 
 // Circle properties
-int centerX;             // X coordinate of center
-int centerY;             // Y coordinate of center
-int initialRadius = 5;  // Start radius
-int radius = initialRadius; // Current radius
-int growthSpeed = 2;     // How fast radius increases
-Uint32 lastTime = 0;     // Timer for smooth growth
+int centerX;
+int centerY;
+int initialRadius = 5;
+int radius = 5;
+int growthSpeed = 2;
+Uint32 lastTime = 0;
 
 // Initialize window & renderer
-bool initializeWindow()
+int initializeWindow()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        cout << "SDL failed to initialize\n";
-        return false;
+        printf("SDL failed to initialize\n");
+        return 0;
     }
 
     window = SDL_CreateWindow(
@@ -40,22 +38,22 @@ bool initializeWindow()
 
     if (!window)
     {
-        cout << "Failed to open window\n";
-        return false;
+        printf("Failed to open window\n");
+        return 0;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer)
     {
-        cout << "Failed to create renderer\n";
-        return false;
+        printf("Failed to create renderer\n");
+        return 0;
     }
 
     centerX = SCREEN_WIDTH / 2;
     centerY = SCREEN_HEIGHT / 2;
     lastTime = SDL_GetTicks();
 
-    return true;
+    return 1;
 }
 
 // Handle input
@@ -65,7 +63,7 @@ void process_input()
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
-            gameIsRunning = false;
+            gameIsRunning = 0;
     }
 }
 
@@ -89,14 +87,12 @@ void updateRadius()
 {
     Uint32 currentTime = SDL_GetTicks();
 
-    // Update every 20ms for smooth growth
     if (currentTime - lastTime > 20)
     {
         radius += growthSpeed;
         lastTime = currentTime;
     }
 
-    // Reset if collides with window edges
     if (centerX + radius >= SCREEN_WIDTH ||
         centerX - radius <= 0 ||
         centerY + radius >= SCREEN_HEIGHT ||
@@ -109,14 +105,11 @@ void updateRadius()
 // Draw everything
 void draw()
 {
-    // Background color: green 
     SDL_SetRenderDrawColor(renderer, 0, 106, 78, 255);
     SDL_RenderClear(renderer);
 
-    // Circle color: red
     SDL_SetRenderDrawColor(renderer, 244, 42, 65, 255);
 
-    // Update radius before drawing
     updateRadius();
     drawCircle(centerX, centerY, radius);
 
@@ -131,7 +124,7 @@ void destroyWindow()
     SDL_Quit();
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     gameIsRunning = initializeWindow();
 
@@ -144,3 +137,4 @@ int main(int argc, char* argv[])
     destroyWindow();
     return 0;
 }
+
