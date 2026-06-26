@@ -42,8 +42,10 @@ void moveSnake(Snake *snake)
 {
     for (int i = snake->length - 1; i > 0; i--)
     {
-        snake->body[i].x =
+        snake->body[i] = snake->body[i - 1]; // shift body from end of the block
     }
+    snake->body[0].x = snake->dx;
+    snake->body[0].y = snake->dy; // head shift dx and dy
 }
 int main()
 {
