@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h> // Added for sprintf print score and final score
+#include <stdbool.h>
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -46,6 +47,28 @@ void moveSnake(Snake *snake)
     }
     snake->body[0].x = snake->dx;
     snake->body[0].y = snake->dy; // head shift dx and dy
+}
+
+// cheak collision or not
+bool cheakCollision(Snake *snake)
+{
+    // wall condition if -1 value of head cordinate position x or y or cordiante value geater
+    //  then screen hight and screen width then collision occurs
+    if (snake->body[0].x < 0 || snake->body[0].y < 0 ||
+        snake->body[0].x >= SCREEN_WIDTH || snake->body[0].y >= SCREEN_HEIGHT)
+    {
+        return true;
+    }
+    // add self collision of the snake;
+    for (int i = 1; i < snake->length; i++)
+    {
+        if (snake->body[0].x == snake->body[i].x &&
+            snake->body[0].y == snake->body[i].y)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 int main()
 {
