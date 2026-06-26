@@ -25,6 +25,7 @@ typedef struct
 {
     Point pos;
 } Food;
+// built snake body and position of the snake
 void initSnake(Snake *snake)
 {
     snake->length = 3;
@@ -35,6 +36,14 @@ void initSnake(Snake *snake)
     }
     snake->dx = CELL_SIZE;
     snake->dy = 0;
+}
+// movement of snake snake block move last to first one by one
+void moveSnake(Snake *snake)
+{
+    for (int i = snake->length - 1; i > 0; i--)
+    {
+        snake->body[i].x =
+    }
 }
 int main()
 {
