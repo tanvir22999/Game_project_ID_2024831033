@@ -71,6 +71,12 @@ bool cheakCollision(Snake *snake)
     return false;
 }
 // food generation in random within screen size
-void generate int main()
+void generateFood(Food *food)
+{
+    food->pos.x = (rand() % (SCREEN_WIDTH / CELL_SIZE)) * CELL_SIZE;
+    food->pos.y = (rand() % (SCREEN_HEIGHT / CELL_SIZE)) * CELL_SIZE;
+}
+
+int main()
 {
 }
