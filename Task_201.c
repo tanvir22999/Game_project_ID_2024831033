@@ -85,6 +85,7 @@ bool cheakFoodcolision(Snake *snake, Food *food)
 }
 int main()
 {
+    // varible all intialize
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window *window = SDL_CreateWindow("Game|Score: 0", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
@@ -97,4 +98,52 @@ int main()
     int score = 0;
     SDL_Event e;
     char titleBuffer[50];
+    // input and controlling snake
+    while (isrunning)
+    {
+        // input
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                isrunning = false;
+            }
+            else if (e.type == SDL_KEYDOWN)
+            {
+                switch (e.key.keysym.sym)
+                {
+                case SDLK_UP:
+                    if (snake.dy == 0)
+                    {
+                        snake.dx = 0;
+                        snake.dy = -CELL_SIZE;
+                    }
+                    break;
+                case SDLK_DOWN:
+                    if (snake.dy == 0)
+                    {
+                        snake.dx = 0;
+                        snake.dy = CELL_SIZE;
+                    }
+                    break;
+                case SDLK_LEFT:
+                    if (snake.dx == 0)
+                    {
+                        snake.dy = 0;
+                        snake.dx = -CELL_SIZE;
+                    }
+                    break;
+                case SDLK_RIGHT:
+                    if (snake.dx = 0)
+                    {
+                        snake.dy = 0;
+                        snake.dx = CELL_SIZE;
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
 }
