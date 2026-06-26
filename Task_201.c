@@ -85,4 +85,16 @@ bool cheakFoodcolision(Snake *snake, Food *food)
 }
 int main()
 {
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Window *window = SDL_CreateWindow("Game|Score: 0", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+    srand(time(NULL));
+    Food food;
+    Snake snake;
+    generateFood(&food);
+    initSnake(&snake);
+    bool isrunning = true;
+    int score = 0;
+    SDL_Event e;
+    char titleBuffer[50];
 }
