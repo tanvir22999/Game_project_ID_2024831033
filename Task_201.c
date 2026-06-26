@@ -59,7 +59,7 @@ bool cheakCollision(Snake *snake)
     {
         return true;
     }
-    // add self collision of the snake;
+    // add self collision of the snake
     for (int i = 1; i < snake->length; i++)
     {
         if (snake->body[0].x == snake->body[i].x &&
@@ -70,6 +70,7 @@ bool cheakCollision(Snake *snake)
     }
     return false;
 }
-int main()
+// food generation in random within screen size
+void generate int main()
 {
 }
