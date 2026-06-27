@@ -175,4 +175,32 @@ int main()
     // Background color draw
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
+    // snake coloring
+    for (int i = 0; i < snake.length; i++)
+    {
+        int radius = CELL_SIZE / 2;
+        if (i == 0)
+        {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+        }
+        else
+        {
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
+        }
+        int centerx = snake.body[i].x + radius;
+        int centery = snake.body[i].y + radius;
+        for (int w = 0; w < radius * 2; w++)
+        {
+            for (int h = 0; h < radius * 2; h++)
+            {
+                int dx = radius - w;
+                int dy = radius - h;
+                if (dx * dx + dy * dy <= radius * radius)
+                {
+                    SDL_RenderDrawPoint(renderer, centerx + dx, centery + dy);
+                }
+            }
+        }
+    }
 }
