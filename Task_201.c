@@ -83,6 +83,22 @@ bool cheakFoodcolision(Snake *snake, Food *food)
         return true;
     return false;
 }
+// Dreaw circle block of the snake
+void Draw_circle(SDL_Renderer *renderer, int centerx, int centery, int radius)
+{
+    for (int w = 0; w < radius * 2; w++)
+    {
+        for (int h = 0; h < radius * 2; h++)
+        {
+            int dx = radius - w;
+            int dy = radius - h;
+            if (dx * dx + dy * dy <= radius * radius)
+            {
+                SDL_RenderDrawPoint(renderer, centerx + dx, centery + dy);
+            }
+        }
+    }
+}
 int main()
 {
     // varible all intialize
@@ -190,17 +206,6 @@ int main()
         }
         int centerx = snake.body[i].x + radius;
         int centery = snake.body[i].y + radius;
-        for (int w = 0; w < radius * 2; w++)
-        {
-            for (int h = 0; h < radius * 2; h++)
-            {
-                int dx = radius - w;
-                int dy = radius - h;
-                if (dx * dx + dy * dy <= radius * radius)
-                {
-                    SDL_RenderDrawPoint(renderer, centerx + dx, centery + dy);
-                }
-            }
-        }
+        Draw_circle(&renderer, centerx, centery, radius);
     }
 }
