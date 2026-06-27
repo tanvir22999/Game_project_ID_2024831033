@@ -166,4 +166,13 @@ int main()
         SDL_SetWindowTitle(window, titleBuffer);
         generateFood(&food);
     }
+    // Game over condition
+    if (cheakCollision(&snake))
+    {
+        isrunning = false;
+    }
+
+    // Background color draw
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
 }
