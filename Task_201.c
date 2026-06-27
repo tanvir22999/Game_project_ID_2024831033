@@ -45,8 +45,8 @@ void moveSnake(Snake *snake)
     {
         snake->body[i] = snake->body[i - 1]; // shift body from end of the block
     }
-    snake->body[0].x = snake->dx;
-    snake->body[0].y = snake->dy; // head shift dx and dy
+    snake->body[0].x += snake->dx;
+    snake->body[0].y += snake->dy; // head shift dx and dy
 }
 
 // cheak collision or not
@@ -113,7 +113,7 @@ int main()
     bool isrunning = true;
     int score = 0;
     SDL_Event e;
-    char titleBuffer[50];
+    char titleBuffer[100];
     // input and controlling snake
     while (isrunning)
     {
@@ -150,7 +150,7 @@ int main()
                     }
                     break;
                 case SDLK_RIGHT:
-                    if (snake.dx = 0)
+                    if (snake.dx == 0)
                     {
                         snake.dy = 0;
                         snake.dx = CELL_SIZE;
@@ -161,55 +161,74 @@ int main()
                 }
             }
         }
-    }
 
-    moveSnake(&snake); // movement snake
+        moveSnake(&snake); // movement snake
 
-    // Food colision when snake eating food
-    // step1 -> increase length of the snake if snake length not over max length
-    // step2 -> increase score
-    // step3 -> Update window title buffer and show it
-    // step4 -> generate new food
+        // Food colision when snake eating food
+        // step1 -> increase length of the snake if snake length not over max length
+        // step2 -> increase score
+        // step3 -> Update window title buffer and show it
+        // step4 -> generate new food
 
-    if (cheakFoodcolision(&snake, &food))
-    {
-        if (snake.length < MAX_SNAKE_LENGTH)
+        if (cheakFoodcolision(&snake, &food))
         {
-            snake.length += 1;
+            if (snake.length < MAX_SNAKE_LENGTH)
+            {
+                snake.length += 1;
+            }
+            score += 10;
+            sprintf(titleBuffer, "Game**#**Score: %d ", score);
+            SDL_SetWindowTitle(window, titleBuffer);
+            generateFood(&food);
         }
-        score += 10;
-        sprintf(titleBuffer, "Game**#**Score: %d ", score);
-        SDL_SetWindowTitle(window, titleBuffer);
-        generateFood(&food);
-    }
-    // Game over condition
-    if (cheakCollision(&snake))
-    {
-        isrunning = false;
-    }
 
-    // Background color draw
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        // Game over condition
+        if (cheakCollision(&snake))
+        {
+            isrunning = false;
+        }
+
+        // 1.Background color draw clear screen
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        // 2.snake coloring
+        for (int i = 0; i < snake.length; i++)
+        {
+            if (i == 0)
+            {
+                SDL_SetRenderDrawColor(renderer, 100, (score * 2) % 255, (score * 3) % 255, 255);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, 0, (score * 3) % 255, 180, 255); // Solid body color
+            }
+
+            Draw_circle(renderer, snake.body[i].x + CELL_SIZE / 2, snake.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
+        }
+
+        // 3.Food coloring using renderer
+        SDL_SetRenderDrawColor(renderer, 255, (score * 4) % 255, (score * 5) % 255, 255);
+        Draw_circle(renderer, food.pos.x + CELL_SIZE / 2, food.pos.y + CELL_SIZE / 2, CELL_SIZE / 2); // drew cirle food block
+
+        // 4. Frame and wait
+        SDL_RenderPresent(renderer);
+        SDL_Delay(100);
+    }
+    // game over score board total score show
+
+    sprintf(titleBuffer, "Game Over ***** Final Score: %d", score);
+    SDL_SetWindowTitle(window, titleBuffer);
+
+    // flash final window color
+    SDL_SetRenderDrawColor(renderer, 0, 180, 180, 255);
     SDL_RenderClear(renderer);
-
-    // snake coloring
-    for (int i = 0; i < snake.length; i++)
-    {
-        if (i == 0)
-        {
-            SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-        }
-        else
-        {
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
-        }
-
-        Draw_circle(renderer, snake.body[i].x + CELL_SIZE / 2, snake.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
-    }
-
-    // Food coloring using renderer
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderPresent(renderer);
-    SDL_Delay(100);
-    Draw_circle(renderer, food.pos.x + CELL_SIZE / 2, food.pos.y + CELL_SIZE / 2, CELL_SIZE / 2); // drew cirle food block
+    SDL_Delay(2000);
+
+    // Destroy renderer and window
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
