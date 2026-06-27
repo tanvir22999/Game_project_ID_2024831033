@@ -195,7 +195,6 @@ int main()
     // snake coloring
     for (int i = 0; i < snake.length; i++)
     {
-        int radius = CELL_SIZE / 2;
         if (i == 0)
         {
             SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
@@ -204,8 +203,13 @@ int main()
         {
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
         }
-        int centerx = snake.body[i].x + radius;
-        int centery = snake.body[i].y + radius;
-        Draw_circle(&renderer, centerx, centery, radius);
+
+        Draw_circle(renderer, snake.body[i].x + CELL_SIZE / 2, snake.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
     }
+
+    // Food coloring using renderer
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(100);
+    Draw_circle(renderer, food.pos.x + CELL_SIZE / 2, food.pos.y + CELL_SIZE / 2, CELL_SIZE / 2); // drew cirle food block
 }
