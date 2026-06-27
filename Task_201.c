@@ -5,8 +5,8 @@
 #include <stdio.h> // Added for sprintf print score and final score
 #include <stdbool.h>
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 840
+#define SCREEN_HEIGHT 680
 #define CELL_SIZE 20
 #define MAX_SNAKE_LENGTH 100
 
@@ -176,7 +176,7 @@ int main()
             {
                 snake.length += 1;
             }
-            score += 10;
+            score += 15;
             sprintf(titleBuffer, "Game**#**Score: %d ", score);
             SDL_SetWindowTitle(window, titleBuffer);
             generateFood(&food);
@@ -195,16 +195,26 @@ int main()
         // 2.snake coloring
         for (int i = 0; i < snake.length; i++)
         {
-            if (i == 0)
+            if (i == snake.length - 1)
             {
+                SDL_Rect rect = {snake.body[i].x, snake.body[i].y, CELL_SIZE, CELL_SIZE};
+
                 SDL_SetRenderDrawColor(renderer, 100, (score * 2) % 255, (score * 3) % 255, 255);
+
+                SDL_RenderFillRect(renderer, &rect);
             }
             else
             {
-                SDL_SetRenderDrawColor(renderer, 0, (score * 3) % 255, 180, 255); // Solid body color
+                if (i == 0)
+                {
+                    SDL_SetRenderDrawColor(renderer, 130, (score * 1) % 255, (score * 2) % 255, 235);
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(renderer, 60, (score * 3) % 255, (score * 2) % 255, 175); // Solid body color
+                }
+                Draw_circle(renderer, snake.body[i].x + CELL_SIZE / 2, snake.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
             }
-
-            Draw_circle(renderer, snake.body[i].x + CELL_SIZE / 2, snake.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
         }
 
         // 3.Food coloring using renderer
@@ -219,7 +229,7 @@ int main()
 
     sprintf(titleBuffer, "Game Over ***** Final Score: %d", score);
     SDL_SetWindowTitle(window, titleBuffer);
-
+    printf("Final Score: %d\n", score);
     // flash final window color
     SDL_SetRenderDrawColor(renderer, 0, 180, 180, 255);
     SDL_RenderClear(renderer);
