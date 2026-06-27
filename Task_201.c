@@ -146,4 +146,24 @@ int main()
             }
         }
     }
+
+    moveSnake(&snake); // movement snake
+
+    // Food colision when snake eating food
+    // step1 -> increase length of the snake if snake length not over max length
+    // step2 -> increase score
+    // step3 -> Update window title buffer and show it
+    // step4 -> generate new food
+
+    if (cheakFoodcolision(&snake, &food))
+    {
+        if (snake.length < MAX_SNAKE_LENGTH)
+        {
+            snake.length += 1;
+        }
+        score += 10;
+        sprintf(titleBuffer, "Game**#**Score: %d ", score);
+        SDL_SetWindowTitle(window, titleBuffer);
+        generateFood(&food);
+    }
 }
