@@ -9,6 +9,7 @@
 #define SCREEN_HEIGHT 680
 #define CELL_SIZE 20
 #define MAX_SNAKE_LENGTH 100
+int speed = 100;
 
 typedef struct
 {
@@ -21,6 +22,12 @@ typedef struct
     int length;
     int dx, dy; // direction
 } Snake;
+typedef struct
+{
+    Point body[MAX_SNAKE_LENGTH];
+    int length;
+    int dx, dy;
+} Snake2;
 
 typedef struct
 {
@@ -38,6 +45,17 @@ void initSnake(Snake *snake)
     snake->dx = CELL_SIZE;
     snake->dy = 0;
 }
+void initSnake2(Snake2 *snake)
+{
+    snake->length = 3;
+    for (int i = 0; i < 3; i++)
+    { // this loop define intialize snake lenght 3
+        snake->body[i].y = SCREEN_HEIGHT / 2 - 5 - CELL_SIZE * i;
+        snake->body[i].x = SCREEN_HEIGHT / 2 - 5;
+    }
+    snake->dx = 0;
+    snake->dy = -CELL_SIZE;
+}
 // movement of snake snake block move last to first one by one
 void moveSnake(Snake *snake)
 {
@@ -48,9 +66,18 @@ void moveSnake(Snake *snake)
     snake->body[0].x += snake->dx;
     snake->body[0].y += snake->dy; // head shift dx and dy
 }
+void moveSnake2(Snake2 *snake2)
+{
+    for (int i = snake2->length - 1; i > 0; i--)
+    {
+        snake2->body[i] = snake2->body[i - 1]; // shift body from end of the block
+    }
+    snake2->body[0].x += snake2->dx;
+    snake2->body[0].y += snake2->dy; // head shift dx and dy
+}
 
 // cheak collision or not
-bool cheakCollision(Snake *snake)
+bool cheakCollision(Snake *snake, Snake2 *snake2)
 {
     // wall condition if -1 value of head cordinate position x or y or cordiante value geater
     //  then screen hight and screen width then collision occurs
@@ -68,7 +95,27 @@ bool cheakCollision(Snake *snake)
             return true;
         }
     }
+    for (int i = 0; i < snake2->length; i++)
+    {
+        if (snake->body[0].x == snake2->body[i].x &&
+            snake->body[0].y == snake2->body[i].y)
+        {
+            return true;
+        }
+    }
     return false;
+}
+// snake2
+void cheakCollision2(Snake2 *snake)
+{
+    // wall condition if -1 value of head cordinate position x or y or cordiante value geater
+    //  then screen hight and screen width then collision occurs
+    if (snake->body[0].x < 0 || snake->body[0].y < 0 ||
+        snake->body[0].x >= SCREEN_WIDTH || snake->body[0].y >= SCREEN_HEIGHT)
+    {
+        snake->body[0].x = (rand() % SCREEN_WIDTH / CELL_SIZE) * CELL_SIZE;
+        snake->body[0].y = (rand() % SCREEN_WIDTH / CELL_SIZE) * CELL_SIZE;
+    }
 }
 // food generation in random within screen size
 void generateFood(Food *food)
@@ -108,8 +155,10 @@ int main()
     srand(time(NULL));
     Food food;
     Snake snake;
+    Snake2 snake2;
     generateFood(&food);
     initSnake(&snake);
+    initSnake2(&snake2);
     bool isrunning = true;
     int score = 0;
     SDL_Event e;
@@ -163,6 +212,8 @@ int main()
         }
 
         moveSnake(&snake); // movement snake
+        moveSnake2(&snake2);
+        cheakCollision2(&snake2);
 
         // Food colision when snake eating food
         // step1 -> increase length of the snake if snake length not over max length
@@ -183,7 +234,7 @@ int main()
         }
 
         // Game over condition
-        if (cheakCollision(&snake))
+        if (cheakCollision(&snake, &snake2))
         {
             isrunning = false;
         }
@@ -192,7 +243,30 @@ int main()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // 2.snake coloring
+        // 2.snake2 coloring
+        for (int i = 0; i < snake2.length; i++)
+        {
+            if (i == snake2.length - 1)
+            {
+                SDL_Rect rect = {snake2.body[i].x, snake2.body[i].y, CELL_SIZE, CELL_SIZE};
+
+                SDL_SetRenderDrawColor(renderer, 100, (score * 2) % 255, (score * 3) % 255, 255);
+
+                SDL_RenderFillRect(renderer, &rect);
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    SDL_SetRenderDrawColor(renderer, 130, (score * 1) % 255, (score * 2) % 255, 235);
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(renderer, 60, (score * 3) % 255, (score * 2) % 255, 175); // Solid body color
+                }
+                Draw_circle(renderer, snake2.body[i].x + CELL_SIZE / 2, snake2.body[i].y + CELL_SIZE / 2, CELL_SIZE / 2); // Draw circle snake block
+            }
+        }
         for (int i = 0; i < snake.length; i++)
         {
             if (i == snake.length - 1)
@@ -223,7 +297,12 @@ int main()
 
         // 4. Frame and wait
         SDL_RenderPresent(renderer);
-        SDL_Delay(100);
+        if (snake.length > 3 && snake.length % 3 == 0)
+        {
+            if (speed > 50)
+                speed -= 10;
+        }
+        SDL_Delay(speed);
     }
     // game over score board total score show
 
